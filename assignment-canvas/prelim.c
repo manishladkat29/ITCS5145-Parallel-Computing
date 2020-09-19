@@ -3,7 +3,7 @@
 
 void validateName(int hostname){
   if(hostname == -1){
-    print("Invalid hostname");
+    printf("Invalid hostname");
   }
 }
 
