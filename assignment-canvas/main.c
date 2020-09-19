@@ -48,7 +48,7 @@ int main (int argc, char* argv[]) {
   diff=b-a;
   t=diff/n;
   for(cnt=0;cnt<=n-1;cnt++){
-    val=a+((cnt+0.5)*t);
+    x=a+((cnt+0.5)*t);
 
     switch (functionId) {
       case 1: val = val+f1(x,intensity);
