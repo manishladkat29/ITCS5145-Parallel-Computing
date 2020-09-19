@@ -12,7 +12,7 @@ int main () {
   char n[256];
   int hostname;
 
-  hostname = gethostname(name, sizeof(n));
+  hostname = gethostname(n, sizeof(n));
   validateName(hostname);
 
   printf("Hostname: %s\n", n);
