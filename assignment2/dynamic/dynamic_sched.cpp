@@ -2,7 +2,11 @@
 #include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
+#include <cmath>
+
+using namespace std;
 
 #ifdef __cplusplus
 extern "C" {
@@ -76,7 +80,7 @@ void* iteration_level_integration(void* p)
 {
    int begin, end;
    while(!done()){
-   my_struct *obj_struct = (my_struct*)p;
+   struct1 *obj_struct = (struct1*)p;
 
    getnext(&begin, &end);
 
@@ -123,7 +127,7 @@ void* chunk_level_integration(void* p)
   while(!done())
   {
 
-     my_struct *obj_struct = (my_struct*)p;
+     struct1 *obj_struct = (struct1*)p;
      int begin, end;
      float sum = 0.0;
      getnext(&begin, &end);
@@ -161,7 +165,7 @@ void* thread_level_integration(void* p)
 
    float sum = 0.0;
    int begin, end;
-   my_struct *obj_struct = (my_struct*)p;
+   struct1 *obj_struct = (struct1*)p;
    while(!done()){
      getnext(&begin, &end);
      for (int i=begin; i<end; i++)
@@ -276,13 +280,12 @@ int main (int argc, char* argv[]) {
 
   pthread_mutex_destroy(&mut);
   pthread_mutex_destroy(&comp_mut);
-  cout<<total_sum*mid;
 
   std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   std::chrono::duration<double> elapsed_seconds = end-start;
 
   // report reult and time
-  std::cout<<result<<std::endl;
+  std::cout<<total_sum*mid<<std::endl;
   std::cerr<<elapsed_seconds.count()<<std::endl;
 
   return 0;

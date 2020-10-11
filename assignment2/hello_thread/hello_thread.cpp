@@ -43,7 +43,7 @@ int main (int argc, char* argv[]) {
     
     for (int i = 0; i < n_thread; i++){
         //wait for all threads to finish
-        pthread_join(thread[i], NULL);
+        pthread_join(threads[i], NULL);
     }
     
     return 0;
