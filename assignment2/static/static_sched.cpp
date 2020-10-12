@@ -5,14 +5,16 @@
 #include <chrono>
 #include <cmath>
 
+using namespace std;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 struct struct1
 {
-  float result;
-  float sum;
+  float global_result;
+  float local_result;
   int start;
   int end;
   int functionid;
@@ -34,59 +36,55 @@ float f4(float x, int intensity);
 #endif
 
 pthread_mutex_t mut;
+float total_sum = 0;
 
-
-void* numerical_integration(void* p)
+void* static_worker(void* p)
 {
-	my_struct *struct_info = (my_struct*)p;
+	struct1 *params = (struct1*)p;
 
-	if(0 == struct_info->sync.compare("iteration"))
+	if(0 == params->sync.compare("iteration"))
 	{
-  		switch(struct_info->functionid)
+  		switch(params->functionid)
   		{
     			case 1:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
           				//lock mutex
         				pthread_mutex_lock(&mut);
-        				total_sum += f1(x, struct_info->intensity);
+        				total_sum += f1(x, params->intensity);
           				//unlock mutex
           				pthread_mutex_unlock(&mut);
       				}
       				break;
 
     			case 2:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
           				//lock mutex
-
 	        			pthread_mutex_lock(&mut);
           				//unlock mutex
-
-        				total_sum +=f2(x, struct_info->intensity);
+        				total_sum +=f2(x, params->intensity);
 					pthread_mutex_unlock(&mut);
       				}
       				break;
 
     			case 3:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
         				pthread_mutex_lock(&mut);
           				//lock mutex
-
-				        total_sum +=f3(x, struct_info->intensity);
+				        total_sum +=f3(x, params->intensity);
           				//unlock mutex
           				pthread_mutex_unlock(&mut);
       				}
       				break;
 
     			case 4:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
         				pthread_mutex_lock(&mut);
           				//lock mutex
-
-        				total_sum +=f4(x, struct_info->intensity);
+        				total_sum +=f4(x, params->intensity);
           				//unlock mutex after writer
 					pthread_mutex_unlock(&mut);
       				}
@@ -94,37 +92,36 @@ void* numerical_integration(void* p)
    		}
 	}
 	else{
-  		switch(struct_info->functionid){
+  		switch(params->functionid){
     			case 1:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
-        				struct_info->sum += f1(x, struct_info->intensity);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
+        				params->local_result += f1(x, params->intensity);
       				}
       				break;
 
     			case 2:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
-        				struct_info->sum +=f2(x, struct_info->intensity);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
+        				params->local_result +=f2(x, params->intensity);
       				}
       				break;
 
     			case 3:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
-        				struct_info->sum += f3(x, struct_info->intensity);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
+        				params->local_result += f3(x, params->intensity);
       				}
       				break;
 
     			case 4:
-      				for (int i=struct_info->lb; i<=struct_info->ub; i++){
-        				float x = (struct_info->a + (i + 0.5) * struct_info->mid);
-        				struct_info->sum += f4(x, struct_info->intensity);
+      				for (int i=params->start; i<=params->end; i++){
+        				float x = (params->a + (i + 0.5) * params->step_size);
+        				params->local_result += f4(x, params->intensity);
       				}
       				break;
    		}
    	}
-
   return NULL;
 }
 
@@ -143,9 +140,9 @@ int main (int argc, char* argv[]) {
     
     	int intensity = atoi(argv[5]);
     	int num_threads = atoi(argv[6]);
-    	const char *sync = argv[7];
+    	string sync = argv[7];
     
-    	float result = 0f;
+    	float result = 0;
     	float step_size = (b - a) / n;
     
     	pthread_mutex_init(&mut, NULL);
@@ -154,41 +151,60 @@ int main (int argc, char* argv[]) {
     
     	//calculate your result here
     	pthread_t ths[num_threads];
-    	Parameters params[num_threads];
+    	struct struct1 params[num_threads];
     
     	int steps_each_thread = int(n / num_threads);
-    	if ((int) n % num_threads != 0)
-        	steps_each_thread += 1;
-    
-    	for (int i = 0; i < num_threads; i++){
-        	params[i].intensity = intensity;
-        	params[i].step_size = step_size;
-        	params[i].start = a + i * step_size * steps_each_thread;
-        	params[i].end = a + (i + 1) * step_size * steps_each_thread;
-        	if (i == num_threads - 1)
-            		params[i].end = b;
-        
-        	params[i].local_result = 0;
-        	params[i].global_result = &result;
-        
-        	pthread_create(&ths[i], NULL, static_worker, (void *) &params[i]);
-    	}
-    
-    	for (int i = 0; i < num_threads; i++){
-        	pthread_join(ths[i], NULL);
-    	}
-    
-    	for (int i = 0; i < num_threads; i++){
-        	result += params[i].local_result;
-    	}
-    
+   	
+	if(0 == sync.compare("iteration")){
+    		pthread_mutex_init(&mut, NULL);
+  	}
+	int j = 0;
+	for(int i=0;i<num_threads;i++){
+
+		if(j<n){
+    			params[i].a = a;
+    			params[i].b = b;
+    			params[i].functionid = functionid;
+    			params[i].intensity = intensity;
+    			params[i].start = j;
+    			params[i].step_size = step_size;
+    			params[i].local_result = 0;
+    			params[i].sync = sync;
+
+    			if((i+1) >= num_threads){
+      				params[i].end = n - 1;
+    			}
+   			else{
+	     			params[i].end = j + (steps_each_thread-1);
+    			}
+
+    			pthread_create(&ths[i], NULL, static_worker, (void*) &params[i]);
+  		}
+		j+=steps_each_thread;
+
+	}
+  	for(int i=0; i < num_threads; i+=1)
+  	{
+    		pthread_join(ths[i], NULL);
+  	}
+
+  	if(0 == sync.compare("iteration"))
+   	{
+      		pthread_mutex_destroy(&mut);
+  	}
+  	else
+  	{
+    		for(int i=0;i < num_threads;i+=1)
+     		{
+        		total_sum+= params[i].local_result;
+     		}
+  	}
+
+ 
     	std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
-    
     	std::chrono::duration<double> elapsed_seconds = end-start;
-    
-    
     	// display result and time
-    	std::cout<<result<<std::endl;
+    	std::cout<<total_sum*step_size<<std::endl;
     	std::cerr<<elapsed_seconds.count()<<std::endl;
     
     	return 0;
