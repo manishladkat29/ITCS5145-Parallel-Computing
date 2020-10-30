@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
+#include <sys/time.h>
+#include <omp.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,7 +23,7 @@ int min(int x, int y) { return (x<y)? x :y; }
  
  
 /* Iterative mergesort function to sort arr[0...n-1] */
-void mergeSort(int arr[], int n, int nbthreads)
+void mergeSort(int* arr, int n, int nbthreads)
 {
     
     omp_set_num_threads(nbthreads);
@@ -51,9 +53,10 @@ void mergeSort(int arr[], int n, int nbthreads)
         }
     }
 }
+
  
 /* Function to merge the two haves arr[l..m] and arr[m+1..r] of array arr[] */
-void merge(int arr[], int l, int m, int r)
+void merge(int* arr, int l, int m, int r)
 {
     int i, j, k;
     int n1 = m - l + 1;
@@ -114,7 +117,7 @@ int main (int argc, char* argv[]) {
     }
     
     int n = atoi(argv[1]);
-    int nothreads = atoi(argv[2]);
+    int nbthreads = atoi(argv[2]);
     // get arr data
     int * arr = new int [n];
     
@@ -134,7 +137,7 @@ int main (int argc, char* argv[]) {
     }
 
     generateMergeSortData (arr, n);
-    mergeSort(arr, 0, n-1, nothreads);    
+    mergeSort(arr, n, nbthreads);    
     checkMergeSortResult (arr, n);
 
     gettimeofday(&end, NULL);
