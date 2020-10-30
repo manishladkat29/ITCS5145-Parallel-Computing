@@ -23,7 +23,7 @@ int min(int x, int y) { return (x<y)? x :y; }
  
  
 /* Iterative mergesort function to sort arr[0...n-1] */
-void mergeSort(int* arr, int n, int nbthreads)
+void mergeSort(int* arr, int r, int nbthreads)
 {
     
     omp_set_num_threads(nbthreads);
@@ -32,7 +32,7 @@ void mergeSort(int* arr, int n, int nbthreads)
                    // curr_size varies from 1 to n/2
     int left_start; // For picking starting index of left subarray
                    // to be merged
-
+    int n =r;
     // Merge subarrays in bottom up manner.  First merge subarrays of
     // size 1 to create sorted subarrays of size 2, then merge subarrays
     // of size 2 to create sorted subarrays of size 4, and so on.
@@ -63,7 +63,8 @@ void merge(int* arr, int l, int m, int r)
     int n2 =  r - m;
  
     /* create temp arrays */
-    int L[n1], R[n2];
+    int* L = new int[n1];
+    int* R = new int[n2];
  
     /* Copy data to temp arrays L[] and R[] */
     for (i = 0; i < n1; i++)
@@ -105,6 +106,8 @@ void merge(int* arr, int l, int m, int r)
         j++;
         k++;
     }
+    delete[] L;
+    delete[] R;
 }
 
 
@@ -120,9 +123,11 @@ int main (int argc, char* argv[]) {
     int nbthreads = atoi(argv[2]);
     // get arr data
     int * arr = new int [n];
+
+    generateMergeSortData (arr, n);
     
     struct timeval start, end;
-    gettimeofday(&start, NULL);
+    //gettimeofday(&start, NULL);
     
     //forces openmp to create the threads beforehand
     #pragma omp parallel
@@ -136,10 +141,9 @@ int main (int argc, char* argv[]) {
         }
     }
 
-    generateMergeSortData (arr, n);
+    gettimeofday(&start, NULL); 
     mergeSort(arr, n, nbthreads);    
-    checkMergeSortResult (arr, n);
-
+   
     gettimeofday(&end, NULL);
 
     double s_sec=start.tv_sec;
@@ -151,7 +155,7 @@ int main (int argc, char* argv[]) {
     double last_time= diff_sec+ diff_usec;
 
     std::cerr<<last_time<<std::endl;
-    
+    checkMergeSortResult (arr, n);
     delete[] arr;
 
     return 0;
