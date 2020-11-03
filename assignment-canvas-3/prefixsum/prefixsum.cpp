@@ -38,8 +38,6 @@ int main (int argc, char* argv[]) {
     omp_set_dynamic(0);
     omp_set_num_threads(atoi(argv[2]));
 
-
-
     int i, n = atoi(argv[1]);
     int * arr = new int [n];
     int * pr = new int [n+1];
