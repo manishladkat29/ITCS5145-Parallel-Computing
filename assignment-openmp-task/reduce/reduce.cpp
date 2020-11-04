@@ -19,6 +19,19 @@ extern "C" {
 #endif
 
 
+//calculate sum of array
+int taskSum(int* arr, int start, int end)
+{
+    int task_sum = 0;
+        // If there are more threads available, creating nested parallel section
+        #pragma omp parallel for reduction(+:task_sum)
+            for(int i=start;i<end;i++)
+                {
+                        task_sum += arr[i];
+                            }
+                                return task_sum;
+                                }
+
 
 int main (int argc, char* argv[]) {
     
@@ -49,8 +62,6 @@ int main (int argc, char* argv[]) {
 
     //insert reduction code here
 
-    int n = atoi(argv[1]);
-    int * arr = new int [n];
     int result = 0;
     int nbthreads = atoi(argv[2]);
     int granularity = n/(2*nbthreads);
@@ -86,8 +97,16 @@ int main (int argc, char* argv[]) {
 
     //end time
     gettimeofday(&end, NULL);
-    double last_time = (end.tv_sec – start.tv_sec + (end.tv_usec - start.tv_usec)/1000000); // in seconds 
+    //double last_time = (end.tv_sec – start.tv_sec + (end.tv_usec - start.tv_usec)/1000000); // in seconds 
     
+    double s_sec=start.tv_sec;
+    double e_sec=end.tv_sec;
+    double diff_sec= e_sec-s_sec;
+    double s_usec=start.tv_usec;
+    double e_usec=end.tv_usec;
+    double diff_usec=(e_usec-s_usec)/1000000;
+    double last_time= diff_sec+ diff_usec;
+
     //free array
     delete[] arr;
 
