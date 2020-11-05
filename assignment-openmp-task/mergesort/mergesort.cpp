@@ -143,7 +143,7 @@ int main (int argc, char* argv[]) {
 
     int nbthreads = atoi(argv[2]);
         //set number of threads
-   // omp_set_num_threads(nbthreads);
+   	omp_set_num_threads(nbthreads);
         
         //temp array
         int * temp = new int [n];
