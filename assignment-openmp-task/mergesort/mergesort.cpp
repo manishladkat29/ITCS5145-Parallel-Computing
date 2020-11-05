@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
+#include <sys/time.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,29 +125,25 @@ int main (int argc, char* argv[]) {
         else {
             std::cerr<<"something is amiss"<<std::endl;
         }
-        }
+    }
 
-        if (argc < 3) { std::cerr<<"usage: "<<argv[0]<<" <n> <nbthreads>"<<std::endl;
-            return -1;
-        }
+    if (argc < 3) { std::cerr<<"usage: "<<argv[0]<<" <n> <nbthreads>"<<std::endl;
+        return -1;
+    }
 
-        long n;
-        n = atol(argv[1]);
+    long n = atol(argv[1]);
 
         // get arr data
-        int * arr = new int [n];
-        generateMergeSortData (arr, n);
+    int * arr = new int [n];
+    generateMergeSortData (arr, n);
 
         //insert sorting code here.
 
-        int nbthreads = atoi(argv[2]);
+    int nbthreads = atoi(argv[2]);
         //set number of threads
-        omp_set_num_threads(nbthreads);
+   // omp_set_num_threads(nbthreads);
         
-
-        // get the data into the arrays
-        int * arr = new int [n];
-             //temp array
+        //temp array
         int * temp = new int [n];
         generateMergeSortData (arr, n);
 
@@ -165,9 +162,6 @@ int main (int argc, char* argv[]) {
             }
         }
 
-
-        
-    
         gettimeofday(&end, NULL);
     
 
