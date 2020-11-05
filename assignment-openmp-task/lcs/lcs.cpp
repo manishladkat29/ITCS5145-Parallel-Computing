@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
+#include <omp.h>
+#include <sys/time.h>
 
 
 #ifdef __cplusplus
@@ -17,7 +19,7 @@ extern "C" {
 }
 #endif
 
-
+int max(int x, int y) { return (x>y)? x :y; }
 
 int main (int argc, char* argv[]) {
 
@@ -56,12 +58,8 @@ int main (int argc, char* argv[]) {
     omp_set_num_threads(nbthreads);
     int maxim = max(n,m);
     // get string data
-    char *X = new char[maxim];
-    char *Y = new char[maxim];
 
     generateLCS(X, m, Y, n);
-    int result=0;
-
     int C[maxim+1][maxim+1];
 
     #pragma omp parallel

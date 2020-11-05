@@ -35,8 +35,8 @@ int taskSum(int* arr, int start, int end)
 
 int main (int argc, char* argv[]) {
     
-    struct timeval start, end;
-    gettimeofday(&start, NULL);
+  // struct timeval start, end;
+   // gettimeofday(&start, NULL);
     
     //forces openmp to create the threads beforehand
     #pragma omp parallel
@@ -75,7 +75,8 @@ int main (int argc, char* argv[]) {
     generateReduceData (arr, atoi(argv[1]));
 
 
-
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
     #pragma omp parallel for
 
     for(int i=0; i<n; i+=granularity){
