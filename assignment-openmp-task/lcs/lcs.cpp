@@ -64,15 +64,19 @@ int main (int argc, char* argv[]) {
 
     #pragma omp parallel
     {
-        #pragma omp for
-            for(int i=0;i<=maxim;i++){
-                C[0][i]=0;
-        }
+        #pragma omp single
+	{
+        	for(int i=0;i<=maxim;i++){
+        		C[0][i]=0;
+        	}
+	}
+        #pragma omp single
+	{
 
-        #pragma omp for
-        for(int i=0;i<=maxim;i++){
-            C[i][0]=0;
-        }
+      		for(int i=0;i<=maxim;i++){
+            		C[i][0]=0;
+        	}
+	}
     }
 
     //start the time
@@ -84,8 +88,6 @@ int main (int argc, char* argv[]) {
         {
             for(int k=1; k<=maxim;k++)
             {
-
-
                 int granularity = 500;
                 if(n<=10)
                     granularity = 50;
@@ -129,8 +131,6 @@ int main (int argc, char* argv[]) {
             result = C[m][n];
         }
     }
-
-
 
         // end the time
     gettimeofday(&end, NULL); 
