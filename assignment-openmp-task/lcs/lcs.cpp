@@ -62,6 +62,7 @@ int main (int argc, char* argv[]) {
     generateLCS(X, m, Y, n);
     int C[maxim+1][maxim+1];
 
+    int limit = 50;
     #pragma omp parallel
     {
         #pragma omp single
@@ -102,7 +103,7 @@ int main (int argc, char* argv[]) {
                 }
                 #pragma omp task shared(X , Y, C, k, maxim)
                 {
-                    #pragma omp parallel for schedule(guided,granularity)
+                    #pragma omp parallel for schedule(guided, limit)
                     for(int j = k; j<=maxim;j++)
                     {
                         if (X[k-1] == Y[j]){
@@ -114,7 +115,7 @@ int main (int argc, char* argv[]) {
                 }
                 #pragma omp task shared(X, Y, C, k, maxim) 
                 { 
-                    #pragma omp parallel for schedule(guided,granularity)
+                    #pragma omp parallel for schedule(guided, limit)
                         for(int i = k;i<=maxim;i++)
                         {
                             if (X[i] == Y[k-1]){
