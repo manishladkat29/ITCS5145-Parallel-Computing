@@ -92,7 +92,7 @@ int main (int argc, char* argv[]) {
                 if(n<=10)
                     granularity = 50;
                 else 
-                    granularity += 5*n;
+                    granularity += 5*n*10;
 
 
                 if (X[k-1] == Y[k-1]){
