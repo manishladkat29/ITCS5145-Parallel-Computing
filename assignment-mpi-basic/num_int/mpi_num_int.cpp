@@ -23,23 +23,13 @@ float f4(float x, int intensity);
 #endif
 
   
-int main (int argc, char* argv[]) {
-
+void numInt(int functionid, float a, float b, int n, int intensity){
+    
     struct timeval start, end;
     gettimeofday(&start, NULL);
 
     MPI_Init(&argc, &argv);
-    if (argc < 6) {
-        std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity>"<<std::endl;
-        return -1;
-    }
-    float result;
-    int functionid = stoi(argv[1]);
-    float a = stof(argv[2]);
-    float b = stof(argv[3]);
-    int n = stoi(argv[4]);
-    int intensity = stoi(argv[5]);
-
+    
     float mid = ((b - a) / n );
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -89,5 +79,24 @@ int main (int argc, char* argv[]) {
         std::cerr<<last_time<<std::endl;
     }
     MPI_Finalize();
+    
+}
+
+int main (int argc, char* argv[]) {
+
+    
+    if (argc < 6) {
+        std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity>"<<std::endl;
+        return -1;
+    }
+    float result;
+    int functionid = stoi(argv[1]);
+    float a = stof(argv[2]);
+    float b = stof(argv[3]);
+    int n = stoi(argv[4]);
+    int intensity = stoi(argv[5]);
+
+    numInt(functionid, a, b, n, intensity);
+    
     return 0;
 }
