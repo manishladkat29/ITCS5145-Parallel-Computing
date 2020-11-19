@@ -4,6 +4,7 @@
 #include <chrono>
 #include <mpi.h>
 #include <chrono>
+#include <sys/time.h>
 
 using namespace std;
 using seconds = chrono::seconds;
