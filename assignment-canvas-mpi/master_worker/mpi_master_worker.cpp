@@ -1,5 +1,13 @@
 #include <mpi.h>
 #include <iostream>
+#include <cmath>
+#include <sys/time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstdlib>
+#include <string.h>
+
+using namespace std;
 
 #ifdef __cplusplus
 extern "C" {
@@ -115,14 +123,15 @@ int main (int argc, char* argv[]) {
         MPI_Recv(worker_range, 2, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
         while(worker_range[0]!=-1){
-            sum = calculate_int(f_id, a, worker_range, intensity, mid);
+            sum = calculate_int(functionid, a, worker_range, intensity, mid);
             MPI_Send(&sum, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
             MPI_Recv(worker_range, 2, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         }
     }
     if(rank == 0){
-        cout<<total_sum*mid;
-        
+        std::cout<<total_sum*mid;
+        gettimeofday(&end, NULL);
+       
         double s_sec=start.tv_sec;
         double e_sec=end.tv_sec;
         double diff_sec= e_sec-s_sec;
