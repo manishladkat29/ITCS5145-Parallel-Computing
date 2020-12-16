@@ -1,0 +1,10 @@
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20370 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20395 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20418 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20435 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20457 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20539 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20576 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20606 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20635 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}
+/var/spool/torque/mom_priv/jobs/46654.mba-m1.uncc.edu.SC: line 28: 20673 Segmentation fault      (core dumped) ./mergesort $n $t > /dev/null 2> ${RESULTDIR}/mergesort_${n}_${t}

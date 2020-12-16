@@ -1,0 +1,12 @@
+0. timing correctly 10 points
+1. use all 4 functions  5 points
+2. pass intensity along 5 points
+3. compute the right results    25 points
+4. code is readable (indent, formation) 10 points
+5. I/O is correct (stderr, stdout) 5 points
+6. engineering efforts (no code repeat, do basic check) 10 points
+7. run on mamba (by looking at the job log) 15 points
+8. plots are correct. 15 points
+
+total is 100.
+
