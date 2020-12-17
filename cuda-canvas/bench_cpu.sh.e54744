@@ -1,0 +1,6 @@
+gcc(3):ERROR:105: Unable to locate a modulefile for 'gcc/5.3.0'
+rm: cannot remove ‘result_cpu’: No such file or directory
+2
+11
+101
+1001
