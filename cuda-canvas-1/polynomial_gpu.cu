@@ -6,7 +6,18 @@ void polynomial_expansion (float* poly, int degree,
 			   int n, float* array) {
   //TODO: Write code to use the GPU here!
   //code should write the output back to array
-
+  int index = blockIdx.x * blockDim.x + threadIdx.x;
+  if( index < n )
+  {
+    float out = 0.0;
+    float xtothepowerof = 1.0;
+    for ( int i = 0; i < degree+1; ++i)
+    {
+      out += xtothepowerof * poly[i];
+      xtothepowerof *= array[index];
+    }
+    array[index] = out;
+  }
 }
 
 
@@ -30,12 +41,25 @@ int main (int argc, char* argv[]) {
   for (int i=0; i<degree+1; ++i)
     poly[i] = 1.;
 
+  float *dev_array, *dev_poly;
   
   std::chrono::time_point<std::chrono::system_clock> begin, end;
   begin = std::chrono::system_clock::now();
   
-  for (int iter = 0; iter<nbiter; ++iter)
-    polynomial_expansion (poly, degree, n, array);
+  //for (int iter = 0; iter<nbiter; ++iter)
+    //polynomial_expansion (poly, degree, n, array);
+    
+  cudaMallocManaged(&dev_array, n*sizeof(float));
+  cudaMallocManaged(&dev_poly, (degree+1)*sizeof(float));
+
+  cudaMemcpy(dev_array, array, n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(dev_poly, poly, (degree+1)*sizeof(float), cudaMemcpyHostToDevice);
+
+  polynomial_expansion<<<(n+255)/256, 256>>>(dev_poly, degree, n, dev_array);
+  cudaMemcpy(array, dev_array, n*sizeof(float), cudaMemcpyDeviceToHost);
+  cudaFree(dev_array);
+  cudaFree(dev_poly);
+  cudaDeviceSynchronize();
 
   end = std::chrono::system_clock::now();
   std::chrono::duration<double> totaltime = (end-begin)/nbiter;
